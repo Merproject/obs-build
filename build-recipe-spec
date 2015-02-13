@@ -77,7 +77,7 @@ recipe_prepare_spec() {
 	    echo -----------------------------------------------------------------
 	    echo "I have the following modifications for $RECIPEFILE:"
 	    sed -e "/^%changelog/q" $BUILD_ROOT$TOPDIR/SOURCES/$RECIPEFILE > $BUILD_TARGET/.spec.t1
-	    sed -e "/^%changelog/q" $BUILD_ROOT/.spec.new > $BUILD_TARGET/.spec.t2
+	    sed -e "/^%changelog/q" $BUILD_TARGET/.spec.new > $BUILD_TARGET/.spec.t2
 	    diff $BUILD_TARGET/.spec.t1 $BUILD_TARGET/.spec.t2
 	    rm -f $BUILD_TARGET/.spec.t1 $BUILD_TARGET/.spec.t2
 	    mv $BUILD_TARGET/.spec.new $BUILD_ROOT$TOPDIR/SOURCES/$RECIPEFILE
