@@ -1007,14 +1007,18 @@ fi
 
 if test -n "$LOGFILE" -a -z "$RUN_SHELL" ; then
     echo "logging output to $LOGFILE..."
-    rm -f $LOGFILE
-    touch $LOGFILE
+    if test "$BUILD_ROOT" = "$BUILD_TARGET" ; then
+      rm -f $LOGFILE
+      touch $LOGFILE
+    fi
     # set start time, to be substracted for build log timestamps
     STARTTIME=`perl -e 'print time()'`
 
-    if test -n "$RUNNING_IN_VM" ; then
-        # no additional timestamps in inner vm build system
-	exec 1> >(exec -a 'build logging' tee -a $LOGFILE) 2>&1
+    if test -n "$RUNNING_IN_VM"; then
+        if test "$VM_TYPE" != 'sb2'; then
+          # no additional timestamps in inner vm build system
+          exec 1> >(exec -a 'build logging' tee -a $LOGFILE) 2>&1
+        fi
     elif test -n "$VM_IMAGE" ; then
         # external run of virtualization build
 	exec 1> >(exec -a 'build logging' perl -e 'open(F,">>",$ARGV[0])||die("$ARGV[0]: $!\n");$|=1;select(F);$|=1;while(<STDIN>){my $p=sprintf("[%5ds] ", time()-'$STARTTIME');print STDOUT $p.$_;s/^\r//s;s/\r\n/\n/gs;print F $p.$_}' $LOGFILE) 2>&1
